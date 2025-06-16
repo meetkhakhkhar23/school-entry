@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Entry - Step by Step</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .form-step {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        .form-step.active {
+            display: flex;
+        }
+        input {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border 0.3s, box-shadow 0.3s;
+        }
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+            outline: none;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Student Entry</h2>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+        <form method="POST" id="entryForm">
+            <div class="form-step active" id="step1">
+                <input type="text" name="name" placeholder="Enter full name" required autofocus>
+                <button type="button" onclick="nextStep(1)">Next</button>
+            </div>
+            <div class="form-step" id="step2">
+                <input type="text" name="class" placeholder="Enter class" required>
+                <button type="button" onclick="nextStep(2)">Next</button>
+            </div>
+            <div class="form-step" id="step3">
+                <input type="text" name="roll" placeholder="Enter roll number" required>
+                <button type="button" onclick="nextStep(3)">Next</button>
+            </div>
+            <div class="form-step" id="step4">
+                <input type="email" name="email" placeholder="Enter email" required>
+                <button type="button" onclick="nextStep(4)">Next</button>
+            </div>
+            <div class="form-step" id="step5">
+                <input type="text" name="phone" placeholder="Enter phone number" required>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const totalSteps = 5;
+        const progress = document.getElementById('progress');
+
+        function nextStep(current) {
+            const currentStep = document.getElementById('step' + current);
+            const nextStep = document.getElementById('step' + (current + 1));
+
+            if (nextStep) {
+                currentStep.classList.remove('active');
+                nextStep.classList.add('active');
+                setTimeout(() => {
+                    nextStep.querySelector('input').focus();
+                }, 200);
+                updateProgress(current + 1);
+            }
+        }
+
+        function updateProgress(step) {
+            const percent = (step / totalSteps) * 100;
+            progress.style.width = percent + '%';
+        }
+
+        document.querySelectorAll('.form-step input').forEach((input, index) => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (index < totalSteps - 1) {
+                        nextStep(index + 1);
+                    } else {
+                        document.getElementById("entryForm").submit();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
